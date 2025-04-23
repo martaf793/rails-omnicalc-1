@@ -27,4 +27,23 @@ class CalculatorsController < ApplicationController
     @result=rand(@users_n1..@users_n2)
     render ({:template => "calc_templates/random_results"})
   end
+  
+  def payment_new
+    render ({:template => "calc_templates/payment_new"})
+  end
+  def payment_results
+    @apr=params.fetch("apr").to_f/100/12
+  @apr_display=params.fetch("apr").to_f.to_fs(:percentage,{:precision=>4})
+  @years=params.fetch("years").to_i*12
+  @years_display=params.fetch("years").to_i
+  @ppal=params.fetch("ppal").to_f
+  @ppal_display=params.fetch("ppal").to_f.to_fs(:currency,{:precision=>2})
+  @numerator= @apr*@ppal
+  @denominator= 1-(1+@apr)**(-@years)
+  @result=@numerator/@denominator
+  @result_display=@result.to_fs(:currency,{:precision=>2})
+  
+    render ({:template => "calc_templates/payment_results"})
+  end
+
 end
